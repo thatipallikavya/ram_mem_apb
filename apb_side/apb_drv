@@ -1,0 +1,32 @@
+class apb_driver extends uvm_driver#(apb_xtn);
+  `uvm_component_utils(apb_driver)
+
+  virtual mem_if.DRV_MP vif;
+  apb_config apb_cfg;
+
+  extern function new(string name="apb_driver",uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern function void connect_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+  extern task write(apb_xtn xtn);
+  extern task read(apb_xtn xtn);
+  extern task send_to_dut(apb_xtn xtn);
+
+endclass
+
+
+function apb_driver::new(string name="apb_driver",uvm_component parent);
+  super.new(name,parent);
+endfunction
+
+
+function void apb_driver::build_phase(uvm_phase phase);
+  if(!uvm_config_db#(apb_config)::get(this,"","apb_config",apb_cfg))
+    `uvm_fatal(get_type_name(),"uvm_config is failed to get in apb_drv")
+endfunction
+
+
+function void apb_driver::connect_phase(uvm_phase phase);
+  vif = apb_cfg.vif;
+endfunction
+
